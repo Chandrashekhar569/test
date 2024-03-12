@@ -1,12 +1,12 @@
 import sys
 import os
-from dataclass import dataclass
+from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
-from sklearn.compose import ColumnTransformar
+from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
-from sklearn.pipeline import pipeline
+from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from src.exception import CustomException
@@ -25,34 +25,34 @@ class DataTransformation:
         "This function responsible for data transformation"
 
         try:
-            numerical_columns = ['writing_score',  'reading_score']
+            numerical_columns = ["reading_score","writing_score"]
             categorical_columns = [
                 'gender',
-                'rece_ethnicity',
+                'race_ethnicity',
                 'parental_level_of_education',
                 'lunch',
                 'test_preparation_course'
             ]
 
-            num_pipeline = pipeline(
+            num_pipeline = Pipeline(
                 steps= [
-                    ("imputer",SimpleImputer(statergy="median"))
-                    ('scaler', StandardScaler())
+                    ("imputer",SimpleImputer(strategy="median")),
+                    ('scaler', StandardScaler(with_mean=False))
                 ]
             )
 
-            cat_pipeline = pipeline(
+            cat_pipeline = Pipeline(
                 steps= [
-                    ('imputer',SimpleImputer(statergy="most_frequent")),
+                    ('imputer',SimpleImputer(strategy="most_frequent")),
                     ("one_hot_encoder",OneHotEncoder()),
-                    ("scaler", StandardScaler())
+                    ("scaler", StandardScaler(with_mean=False))
                 ]
             )
 
-            logging.info(f"Numerical columns :{categorical_columns}")
-            logging.info(f"Categorical columns :{numerical_columns}")
+            logging.info(f"Numerical columns :{numerical_columns}")
+            logging.info(f"Categorical columns :{categorical_columns}")
 
-            preprocessor = ColumnTransformar(
+            preprocessor = ColumnTransformer(
                 [
                     ("num_pipeline", num_pipeline, numerical_columns),
                     ("cat_pipelines", cat_pipeline, categorical_columns)
@@ -79,10 +79,10 @@ class DataTransformation:
             numerical_columns = ['writing_score',  'reading_score']
 
             input_feature_train_df= train_df.drop(columns=[target_column_name], axis=1)
-            target_feature_train_df=train_df[target_column_name]
+            target_feature_train_df= train_df[target_column_name]
 
             input_feature_test_df= test_df.drop(columns=[target_column_name], axis=1)
-            target_feature_test_df=test_df[target_column_name]
+            target_feature_test_df= test_df[target_column_name]
 
             logging.info(
                 f"Appling preprocessing object an training dataframe and testing dataframe"
@@ -113,3 +113,5 @@ class DataTransformation:
 
         except Exception as e:
             raise CustomException(e,sys) 
+
+
