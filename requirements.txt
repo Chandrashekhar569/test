@@ -5,6 +5,7 @@ seaborn
 scikit-learn
 dill
 dataclasses
-catboost
 xgboost
+catboost
+flask
 # -e .
