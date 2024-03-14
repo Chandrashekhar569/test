@@ -17,7 +17,6 @@ from xgboost import XGBRegressor
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 from sklearn.linear_model import ElasticNet
-from sklearn.preprocessing import PolynomialFeatures
 from sklearn.svm import SVR
 
 from src.exception import CustomException
@@ -47,7 +46,6 @@ class ModelTrainer:
                 "Ridge Regression": Ridge(),
                 "Lasso Regression": Lasso(),
                 "ElasticNet Regression": ElasticNet(),
-                "Polynomial Regression": PolynomialFeatures(),
                 "Support Vector Regression (SVR)": SVR(),
                 "Decision Tree Regression": DecisionTreeRegressor(),
                 "Random Forest Regression": RandomForestRegressor(),
@@ -68,10 +66,13 @@ class ModelTrainer:
             best_model_name = list(model_report.keys())[
                 list(model_report.values()).index(best_model_score)
             ]
+            best_model =models[best_model_name]
+
 
             if best_model_score<0.6:
                 raise CustomException("Not any model fit for this data")
-            raise logging.info("best found model on training and test dataset")
+
+            logging.info("best found model on training and test dataset")
 
 
             save_object(
@@ -81,7 +82,8 @@ class ModelTrainer:
 
             predicted = best_model.predict(x_test)
 
-            return r2_score
+            r2_square = r2_score(y_test,predicted)
+            return r2_square
 
         except Exception as e:
             raise CustomException(e, sys)
