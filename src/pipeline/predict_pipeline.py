@@ -26,7 +26,7 @@ class PredictPipeline:
 
 
 class CustomData:
-    def __init__(self,
+    def __init__( self,
                  gender: str,
                  race_ethnicity: str,
                  parental_level_of_education: str,
@@ -44,7 +44,7 @@ class CustomData:
         self.writing_score= writing_score
 
 
-    def get_data_as_data_frame():
+    def get_data_as_data_frame(self):
         try:
             custome_data_input_dict ={
                 "gender": [self.gender],
